@@ -1,0 +1,19 @@
+﻿Build started 5/2/2014 3:37:21 AM.
+     1>Project "C:\Users\john\Documents\GitHub\tetris\tetris\Tetris.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt App.cpp
+         App.cpp
+     1>c:\users\john\documents\github\tetris\tetrislib\z.h(17): warning C4227: anachronism used : qualifiers on reference are ignored
+     1>c:\users\john\documents\github\tetris\tetris\app.cpp(400): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\john\documents\github\tetris\tetris\app.cpp(402): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\john\documents\github\tetris\tetris\app.cpp(440): warning C4715: 'App::getRandomBlock' : not all control paths return a value
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\john\Documents\GitHub\tetris\Debug\Tetris.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\Debug" SDL2.lib SDL2_image.lib SDL2_mixer.lib SDL2_ttf.lib SDL2main.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib tetrislib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\john\Documents\GitHub\tetris\Debug\Tetris.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\john\Documents\GitHub\tetris\Debug\Tetris.lib" /MACHINE:X86 Debug\App.obj
+         C:\Users\john\Documents\GitHub\tetris\Debug\TetrisLib.lib
+     1>MSVCRTD.lib(cinitexe.obj) : warning LNK4098: defaultlib 'msvcrt.lib' conflicts with use of other libs; use /NODEFAULTLIB:library
+         Tetris.vcxproj -> C:\Users\john\Documents\GitHub\tetris\Debug\Tetris.exe
+     1>Done Building Project "C:\Users\john\Documents\GitHub\tetris\tetris\Tetris.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.53
