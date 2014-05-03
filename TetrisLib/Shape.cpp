@@ -9,6 +9,7 @@ namespace TetrisLib {
 
 	Shape::Shape(void)
 	{
+		isSet = false;
 	}
 
 	void Shape::handleEvent(SDL_Event e, bool **screenColliders) {
@@ -17,7 +18,7 @@ namespace TetrisLib {
 			if (e.key.keysym.sym == SDLK_RIGHT)
 				moveRight();
 			else if (e.key.keysym.sym == SDLK_UP)
-				rotate();
+				rotate(90);
 			else if (e.key.keysym.sym == SDLK_LEFT)
 				moveLeft();
 			else if (e.key.keysym.sym == SDLK_DOWN) {
@@ -112,5 +113,9 @@ namespace TetrisLib {
 
 	int Shape::getWidth() const {
 		return WIDTH;
+	}
+
+	Color Shape::getColor() const {
+		return color;
 	}
 }

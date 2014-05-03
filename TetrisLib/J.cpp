@@ -7,6 +7,8 @@ namespace TetrisLib {
 J::J(void)
 {
 	isSet = false;
+	shapeType = ShapeTypes::J;
+	color = Color::Blue;
 
 	WIDTH = BLOCK_WIDTH * 3;
 	HEIGHT = BLOCK_WIDTH * 2;
@@ -16,24 +18,28 @@ J::J(void)
 	r1->setYPos(BLOCK_WIDTH);
 	r1->setHeight(BLOCK_WIDTH);
 	r1->setWidth(BLOCK_WIDTH);
+	r1->setColor(Color::Blue);
 
 	Block* r2 = new Block();
 	r2->setXPos(BLOCK_WIDTH * 2);
 	r2->setYPos(BLOCK_WIDTH);
 	r2->setHeight(BLOCK_WIDTH);
 	r2->setWidth(BLOCK_WIDTH);
+	r2->setColor(Color::Blue);
 
 	Block* r3 = new Block();
 	r3->setXPos(BLOCK_WIDTH * 3);
 	r3->setYPos(BLOCK_WIDTH);
 	r3->setHeight(BLOCK_WIDTH);
 	r3->setWidth(BLOCK_WIDTH);
+	r3->setColor(Color::Blue);
 
 	Block* r4 = new Block();
 	r4->setXPos(BLOCK_WIDTH * 3);
 	r4->setYPos(BLOCK_WIDTH * 2);
 	r4->setHeight(BLOCK_WIDTH);
 	r4->setWidth(BLOCK_WIDTH);
+	r4->setColor(Color::Blue);
 
 	blocks[0] = *r1;
 	blocks[1] = *r2;
@@ -46,7 +52,7 @@ J::~J(void)
 	delete [] blocks;
 }
 
-void J::rotate() {
+void J::rotate(int angle) {
 	//calculate center of block
 	int xCenter = blocks[1].getXPos() + BLOCK_WIDTH / 2;
 	int yCenter = blocks[1].getYPos() + BLOCK_WIDTH / 2;
@@ -59,9 +65,12 @@ void J::rotate() {
 	int xNewAxis = blocks[0].getXPos() - xCenter;
 	int yNewAxis = blocks[0].getYPos() - yCenter + BLOCK_WIDTH;
 
+	//convert angle to radians
+	double radians = angle * 3.1415926536 / 180;
+
 	//rotate
-	int xRotated = floor(xNewAxis * cos(1.5708) - yNewAxis * sin(1.5708) + 0.5);
-	int yRotated = floor(xNewAxis * sin(1.5708) + yNewAxis * cos(1.5708) + 0.5);
+	int xRotated = floor(xNewAxis * cos(radians) - yNewAxis * sin(radians) + 0.5);
+	int yRotated = floor(xNewAxis * sin(radians) + yNewAxis * cos(radians) + 0.5);
 
 	//adjust for center offset
 	blocks[0].setXPos(xCenter + xRotated);
@@ -74,8 +83,8 @@ void J::rotate() {
 	yNewAxis = blocks[1].getYPos() - yCenter + BLOCK_WIDTH;
 
 	//rotate
-	xRotated = floor(xNewAxis * cos(1.5708) - yNewAxis * sin(1.5708) + 0.5);
-	yRotated = floor(xNewAxis * sin(1.5708) + yNewAxis * cos(1.5708) + 0.5);
+	xRotated = floor(xNewAxis * cos(radians) - yNewAxis * sin(radians) + 0.5);
+	yRotated = floor(xNewAxis * sin(radians) + yNewAxis * cos(radians) + 0.5);
 
 	//adjust for center offset
 	blocks[1].setXPos(xCenter + xRotated);
@@ -88,8 +97,8 @@ void J::rotate() {
 	yNewAxis = blocks[2].getYPos() - yCenter + BLOCK_WIDTH;
 
 	//rotate
-	xRotated = floor(xNewAxis * cos(1.5708) - yNewAxis * sin(1.5708) + 0.5);
-	yRotated = floor(xNewAxis * sin(1.5708) + yNewAxis * cos(1.5708) + 0.5);
+	xRotated = floor(xNewAxis * cos(radians) - yNewAxis * sin(radians) + 0.5);
+	yRotated = floor(xNewAxis * sin(radians) + yNewAxis * cos(radians) + 0.5);
 
 	//adjust for center offset
 	blocks[2].setXPos(xCenter + xRotated);
@@ -102,8 +111,8 @@ void J::rotate() {
 	yNewAxis = blocks[3].getYPos() - yCenter + BLOCK_WIDTH;
 
 	//rotate
-	xRotated = floor(xNewAxis * cos(1.5708) - yNewAxis * sin(1.5708) + 0.5);
-	yRotated = floor(xNewAxis * sin(1.5708) + yNewAxis * cos(1.5708) + 0.5);
+	xRotated = floor(xNewAxis * cos(radians) - yNewAxis * sin(radians) + 0.5);
+	yRotated = floor(xNewAxis * sin(radians) + yNewAxis * cos(radians) + 0.5);
 
 	//adjust for center offset
 	blocks[3].setXPos(xCenter + xRotated);

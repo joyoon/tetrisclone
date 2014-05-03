@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include "Color.h"
 
 #pragma once
 
@@ -8,6 +9,7 @@ class Block
 {
 private:
 	SDL_Rect* block;
+	Color color;
 public:
 	Block(void);
 	~Block(void);
@@ -19,6 +21,8 @@ public:
 	void setYPos(int y);
 	void setWidth(int w);
 	void setHeight(int h);
+	Color getColor() const;
+	void setColor(Color color);
 	SDL_Rect* getSDLBlock();
 };
 

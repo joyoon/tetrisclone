@@ -9,6 +9,7 @@ namespace TetrisLib {
 	Square::Square(void)
 	{
 		isSet = false;
+		shapeType = ShapeTypes::Square;
 		WIDTH = BLOCK_WIDTH * 2;
 		HEIGHT = BLOCK_WIDTH * 2;
 
@@ -17,24 +18,28 @@ namespace TetrisLib {
 		r1->setYPos(0);
 		r1->setWidth(BLOCK_WIDTH);
 		r1->setHeight(BLOCK_WIDTH);
+		r1->setColor(Color::Yellow);
 
 		Block* r2 = new Block();
 		r2->setXPos(BLOCK_WIDTH);
 		r2->setYPos(0);
 		r2->setWidth(BLOCK_WIDTH);
 		r2->setHeight(BLOCK_WIDTH);
+		r2->setColor(Color::Yellow);
 
 		Block* r3 = new Block();
 		r3->setXPos(0);
 		r3->setYPos(BLOCK_WIDTH);
 		r3->setWidth(BLOCK_WIDTH);
 		r3->setHeight(BLOCK_WIDTH);
+		r3->setColor(Color::Yellow);
 
 		Block* r4 = new Block();
 		r4->setXPos(BLOCK_WIDTH);
 		r4->setYPos(BLOCK_WIDTH);
 		r4->setWidth(BLOCK_WIDTH);
 		r4->setHeight(BLOCK_WIDTH);
+		r4->setColor(Color::Yellow);
 
 		blocks[0] = *r1;
 		blocks[1] = *r2;
@@ -86,7 +91,7 @@ namespace TetrisLib {
 	void Square::init() {
 	}
 
-	void Square::rotate() {
+	void Square::rotate(int angle) {
 	}
 
 	Square* Square::create() const {

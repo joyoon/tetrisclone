@@ -8,7 +8,8 @@ namespace TetrisLib {
 	T::T(void)
 	{
 		isSet = false;
-
+		shapeType = ShapeTypes::T;
+		color = Color::Purple;
 		WIDTH = BLOCK_WIDTH * 3;
 		HEIGHT = BLOCK_WIDTH * 2;
 
@@ -19,24 +20,28 @@ namespace TetrisLib {
 		r1->setYPos(BLOCK_WIDTH);
 		r1->setWidth(BLOCK_WIDTH);
 		r1->setHeight(BLOCK_WIDTH);
+		r1->setColor(Color::Purple);
 
 		Block* r2 = new Block();
 		r2->setXPos(BLOCK_WIDTH);
 		r2->setYPos(0);
 		r2->setWidth(BLOCK_WIDTH);
 		r2->setHeight(BLOCK_WIDTH);
+		r2->setColor(Color::Purple);
 
 		Block* r3 = new Block();
 		r3->setXPos(BLOCK_WIDTH);
 		r3->setYPos(BLOCK_WIDTH);
 		r3->setWidth(BLOCK_WIDTH);
 		r3->setHeight(BLOCK_WIDTH);
+		r3->setColor(Color::Purple);
 
 		Block* r4 = new Block();
 		r4->setXPos(BLOCK_WIDTH * 2);
 		r4->setYPos(BLOCK_WIDTH);
 		r4->setWidth(BLOCK_WIDTH);
 		r4->setHeight(BLOCK_WIDTH);
+		r4->setColor(Color::Purple);
 
 		blocks[0] = *r1;
 		blocks[1] = *r2;
@@ -87,7 +92,7 @@ namespace TetrisLib {
 	void T::init() {
 	}
 
-	void T::rotate() {
+	void T::rotate(int angle) {
 		//get center of block (rotate around 3rd block in blocks array)
 		int xCenter = blocks[2].getXPos() + BLOCK_WIDTH / 2;
 		int yCenter = blocks[2].getYPos() + BLOCK_WIDTH / 2;
@@ -100,9 +105,12 @@ namespace TetrisLib {
 		int xNewAxis = x - xCenter;
 		int yNewAxis = y - yCenter;
 
+		//convert angle to radians
+		double radians = angle * 3.1415926536 / 180;
+
 		//rotate block
-		int xRotated = floor(xNewAxis * cos(1.5708) - yNewAxis * sin(1.5708) + 0.5);
-		int yRotated = floor(xNewAxis * sin(1.5708) + yNewAxis * cos(1.5708) + 0.5);
+		int xRotated = floor(xNewAxis * cos(radians) - yNewAxis * sin(radians) + 0.5);
+		int yRotated = floor(xNewAxis * sin(radians) + yNewAxis * cos(radians) + 0.5);
 
 		//adjust for center offset
 		xRotated = xRotated + xCenter;
@@ -121,8 +129,8 @@ namespace TetrisLib {
 		yNewAxis = y - yCenter;
 
 		//rotate block
-		xRotated = floor(xNewAxis * cos(1.5708) - yNewAxis * sin(1.5708) + 0.5);
-		yRotated = floor(xNewAxis * sin(1.5708) + yNewAxis * cos(1.5708) + 0.5);
+		xRotated = floor(xNewAxis * cos(radians) - yNewAxis * sin(radians) + 0.5);
+		yRotated = floor(xNewAxis * sin(radians) + yNewAxis * cos(radians) + 0.5);
 
 		//adjust for center offset
 		xRotated = xRotated + xCenter;
@@ -143,8 +151,8 @@ namespace TetrisLib {
 		yNewAxis = y - yCenter;
 
 		//rotate block
-		xRotated = floor(xNewAxis * cos(1.5708) - yNewAxis * sin(1.5708) + 0.5);
-		yRotated = floor(xNewAxis * sin(1.5708) + yNewAxis * cos(1.5708) + 0.5);
+		xRotated = floor(xNewAxis * cos(radians) - yNewAxis * sin(radians) + 0.5);
+		yRotated = floor(xNewAxis * sin(radians) + yNewAxis * cos(radians) + 0.5);
 
 		//adjust for center offset
 		xRotated = xRotated + xCenter;

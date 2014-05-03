@@ -17,7 +17,7 @@ namespace TetrisLib {
 		Square* clone() const;
 		Square(void (*onSetCallback)(SDL_Rect* blocks));
 		~Square(void);
-		void rotate();
+		void rotate(int angle);
 		void setPosition(int x, int y);
 	};
 

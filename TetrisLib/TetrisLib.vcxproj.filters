@@ -72,6 +72,9 @@
     <ClInclude Include="Z.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

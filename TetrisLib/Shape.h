@@ -5,7 +5,6 @@
 #pragma once
 
 namespace TetrisLib {
-
 	class ShapeTypes {
 	public:
 		enum ShapeType {
@@ -22,6 +21,8 @@ namespace TetrisLib {
 	class Shape
 	{
 	protected:
+		ShapeTypes::ShapeType shapeType;
+		Color color;
 		Block blocks[4];
 		void (*onSetCallback) (SDL_Rect* blocks);
 		Shape(void);
@@ -35,7 +36,7 @@ namespace TetrisLib {
 		void moveRight();
 		void moveDown();
 		void moveUp();
-		virtual void rotate() = 0;
+		virtual void rotate(int angle) = 0;
 		void render(SDL_Renderer* renderer);
 		bool isSet;
 		Block* getBlocks();
@@ -46,5 +47,6 @@ namespace TetrisLib {
 		virtual void setPosition(int x, int y) = 0;
 		int getWidth() const;
 		int getHeight() const;
+		Color getColor() const;
 	};
 }

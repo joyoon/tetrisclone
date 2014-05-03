@@ -40,8 +40,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\Tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\SDL2_ttf-2.0.12\include;C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\TetrisLib;C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\Tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\sdl_image\include;C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\Tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\Tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\SDL2_ttf-2.0.12\lib\x86;C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\Debug;C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\Tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\sdl_image\lib\x86;C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\Tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\john\Documents\GitHub\tetrisclone\tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\SDL2_ttf-2.0.12\include;C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\TetrisLib;C:\Users\john\Documents\GitHub\tetrisclone\tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\sdl_image\include;C:\Users\john\Documents\GitHub\tetrisclone\tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\john\Documents\GitHub\tetrisclone\tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\SDL2_ttf-2.0.12\lib\x86;C:\Users\john\Documents\Visual Studio 2012\Projects\Tetris\Debug;C:\Users\john\Documents\GitHub\tetrisclone\tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\sdl_image\lib\x86;C:\Users\john\Documents\GitHub\tetrisclone\tetris\lib\SDL2-devel-2.0.3-VC\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(Configuration)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="Z.h" />
     <ClInclude Include="Block.h" />
     <ClInclude Include="Global.h" />

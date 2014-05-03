@@ -9,7 +9,7 @@ namespace TetrisLib {
 	private:
 		void init();
 	protected:
-		void rotate();
+		void rotate(int angle);
 	public:
 		Z(void);
 		Z(void (*onSetCallback) (SDL_Rect* blocks));

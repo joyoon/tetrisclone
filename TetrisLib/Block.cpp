@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Block.h"
+#include "Color.h"
 
 namespace TetrisLib {
 
@@ -43,6 +44,14 @@ void Block::setWidth(int width) {
 
 void Block::setHeight(int height) {
 	block->h = height;
+}
+
+Color Block::getColor() const {
+	return color;
+}
+
+void Block::setColor(Color color) {
+	this->color = color;
 }
 
 SDL_Rect* Block::getSDLBlock() {

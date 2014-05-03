@@ -7,7 +7,7 @@ namespace TetrisLib {
 	class S : public Shape
 	{
 	protected:
-		void rotate();
+		void rotate(int angle);
 		void init();
 	public:
 		S(void);

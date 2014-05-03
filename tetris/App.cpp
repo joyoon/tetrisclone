@@ -55,6 +55,8 @@ int App::onExecute() {
 		//add new shape to the shapes array
 		shapes.push_back(s);
 
+		curShape = shapes.back();
+
 		//initialize next shape
 		nextShape = getRandomBlock(3);
 
@@ -104,7 +106,15 @@ void App::onEvent(SDL_Event* e) {
 		switch (e->key.keysym.sym)
 		{
 			case SDLK_UP:
-				curShape->rotate();
+				curShape->rotate(90);
+
+				//check if rotation causes collision
+				if (checkBlockOutOfScreen(curShape->getBlocks())) {
+					//rotate the block back
+					curShape->rotate(90);
+					curShape->rotate(90);
+					curShape->rotate(90);
+				}
 				break;
 			case SDLK_RIGHT:
 				curShape->moveRight();
@@ -246,22 +256,56 @@ void App::onRender() {
 	legendViewport.w = BLOCK_WIDTH * 6;
 	legendViewport.h = SCREEN_HEIGHT;
 
-	//clear screen
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(gRenderer);
+
+	//render background
+	SDL_Rect gameBackground = { 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH };
+
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+	SDL_RenderFillRect(gRenderer, &gameBackground);
 
 	SDL_RenderSetViewport(gRenderer, &gameViewPort);
 
 	//render the current shape
-	renderShape(shapes.back()->getBlocks());
+	renderShape(curShape->getBlocks());
 
 	//render set shapes
 	for (int i = 0; i < SCREEN_HEIGHT / 32; i++)
 	{
 		for (int j = 0; j < SCREEN_WIDTH / 32 - 6; j++)
 		{
-			if (screenBlocks[i][j] != NULL)
+			if (screenBlocks[i][j] != NULL) {
+
+				switch (screenBlocks[i][j]->getColor())
+				{
+					case Color::Blue:
+						SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+						break;
+					case Color::Green:
+						SDL_SetRenderDrawColor(gRenderer, 0x00, 0x80, 0x00, 0xFF);
+						break;
+					case Color::Orange:
+						SDL_SetRenderDrawColor(gRenderer, 0xF8, 0x72, 0x17, 0xFF);
+						break;
+					case Color::Purple:
+						SDL_SetRenderDrawColor(gRenderer, 0x7D, 0x05, 0x41, 0xFF);
+						break;
+					case Color::Red:
+						SDL_SetRenderDrawColor(gRenderer, 0x99, 0x00, 0x12, 0xFF);
+						break;
+					case Color::Turqoise:
+						SDL_SetRenderDrawColor(gRenderer, 0x3B, 0x9C, 0x9C, 0xFF);
+						break;
+					case Color::Yellow:
+						SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
+						break;
+					default:
+						break;
+				}
+
 				SDL_RenderFillRect(gRenderer, screenBlocks[i][j]->getSDLBlock());
+			}
 		}
 	}
 
@@ -292,6 +336,8 @@ void App::onRender() {
 
 	//render next block
 	renderShape(nextShape->getBlocks());
+
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
 	//update screen
 	SDL_RenderPresent(gRenderer);
@@ -353,7 +399,34 @@ bool App::onInit() {
 }
 
 void App::renderShape(Block* blocks) {
-	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
+
+	switch (blocks[0].getColor())
+	{
+		case Color::Blue:
+			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+			break;
+		case Color::Green:
+			SDL_SetRenderDrawColor(gRenderer, 0x00, 0x80, 0x00, 0xFF);
+			break;
+		case Color::Orange:
+			SDL_SetRenderDrawColor(gRenderer, 0xF8, 0x72, 0x17, 0xFF);
+			break;
+		case Color::Purple:
+			SDL_SetRenderDrawColor(gRenderer, 0x7D, 0x05, 0x41, 0xFF);
+			break;
+		case Color::Red:
+			SDL_SetRenderDrawColor(gRenderer, 0x99, 0x00, 0x12, 0xFF);
+			break;
+		case Color::Turqoise:
+			SDL_SetRenderDrawColor(gRenderer, 0x3B, 0x9C, 0x9C, 0xFF);
+			break;
+		case Color::Yellow:
+			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
+			break;
+		default:
+			break;
+	}
+
 	SDL_RenderFillRect(gRenderer, blocks[0].getSDLBlock());
 	SDL_RenderFillRect(gRenderer, blocks[1].getSDLBlock());
 	SDL_RenderFillRect(gRenderer, blocks[2].getSDLBlock());
@@ -520,8 +593,10 @@ void App::onBlockSet(Block* blocks) {
 	//add next shape to shapes array
 	shapes.push_back(nextShape);
 
+	curShape = shapes.back();
+
 	//set the position of the block
-	shapes.back()->setPosition(192, 32);
+	curShape->setPosition(192, 32);
 
 	//instantiate next block
 	nextShape = getRandomBlock();
