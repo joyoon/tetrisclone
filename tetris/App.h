@@ -13,13 +13,20 @@ private:
 	int lines;
 	int score;
 	bool quit;
+	bool gameStarted;
+	bool gameRunning;
+	bool gameOver;
+	SDL_Color startMenuTextColor;
 	TTF_Font* gFont;
+	LTexture* gStartTexture;
+	LTexture* gMenuTexture;
 	LTexture* gLevelTextTexture;
 	LTexture* gLevelTexture;
 	LTexture* gLinesTextTexture;
 	LTexture* gLinesTexture;
 	LTexture* gTextTexture;
 	LTexture* gScoreTexture;
+	LTexture* gGameOverTexture;
 	SDL_Window* gWindow;
 	SDL_Renderer* gRenderer;
 	LTimer capTimer;
@@ -27,8 +34,6 @@ private:
 	LTimer blockTimer;
 	Uint32 ticks;
 	Uint32 ticksBetweenMovement;
-	//an array of all the shapes
-	vector<Shape*> shapes;
 	//the current shape
 	Shape* curShape;
 	Shape* nextShape;
@@ -46,6 +51,7 @@ private:
 	bool checkLineCleared(int yIndex);
 	bool checkBlockOutOfScreen(Block* blocks);
 	bool checkCollision(Block* blocks, bool** screenColliders);
+	bool checkForLoss();
 	void close();
 	Shape* getRandomBlock(int seed = 0);
 	void renderShape(Block* blocks);

@@ -1,12 +1,12 @@
-﻿Build started 5/2/2014 11:36:06 PM.
+﻿Build started 5/5/2014 1:22:22 AM.
      1>Project "C:\Users\john\Documents\GitHub\tetrisclone\tetris\Tetris.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt App.cpp
          App.cpp
      1>c:\users\john\documents\github\tetrisclone\tetrislib\z.h(17): warning C4227: anachronism used : qualifiers on reference are ignored
-     1>c:\users\john\documents\github\tetrisclone\tetris\app.cpp(473): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>c:\users\john\documents\github\tetrisclone\tetris\app.cpp(475): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>c:\users\john\documents\github\tetrisclone\tetris\app.cpp(513): warning C4715: 'App::getRandomBlock' : not all control paths return a value
+     1>c:\users\john\documents\github\tetrisclone\tetris\app.cpp(528): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\john\documents\github\tetrisclone\tetris\app.cpp(530): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\john\documents\github\tetrisclone\tetris\app.cpp(568): warning C4715: 'App::getRandomBlock' : not all control paths return a value
      1>Project "C:\Users\john\Documents\GitHub\tetrisclone\tetris\Tetris.vcxproj" (1) is building "C:\Users\john\Documents\GitHub\tetrisclone\TetrisLib\TetrisLib.vcxproj" (2:3) on node 2 (GetResolvedLinkLibs target(s)).
      2>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\Microsoft.CppBuild.targets(346,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
      2>Done Building Project "C:\Users\john\Documents\GitHub\tetrisclone\TetrisLib\TetrisLib.vcxproj" (GetResolvedLinkLibs target(s)).
@@ -18,4 +18,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.85
+Time Elapsed 00:00:00.88

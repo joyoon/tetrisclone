@@ -25,6 +25,13 @@ App::App(void)
 	gLevelTexture = new LTexture();
 	gLinesTextTexture = new LTexture();
 	gLinesTexture = new LTexture();
+	gMenuTexture = new LTexture();
+	gStartTexture = new LTexture();
+	gGameOverTexture = new LTexture();
+	gameStarted = false;
+	gameRunning = false;
+	gameOver = false;
+	curShape = NULL;
 }
 
 App::~App(void)
@@ -47,24 +54,6 @@ int App::onExecute() {
 	{
 		initializeScreenColliders();
 		initializeScreenBlocks();
-
-		//initialize first shape
-		Shape* s = getRandomBlock();
-		s->setPosition(192, 64);
-
-		//add new shape to the shapes array
-		shapes.push_back(s);
-
-		curShape = shapes.back();
-
-		//initialize next shape
-		nextShape = getRandomBlock(3);
-
-		//calculate x position based on width of shape
-		int width = nextShape->getWidth();
-		int xPos = (192 - width) / 2;
-
-		nextShape->setPosition(xPos, 352);
 
 		//event handler
 		SDL_Event e;
@@ -94,9 +83,6 @@ int App::onExecute() {
 
 void App::onEvent(SDL_Event* e) {
 
-	Shape* curShape = NULL;
-	curShape = shapes.back();
-
 	//user requests quit
 	if(e->type == SDL_QUIT) {
 		quit = true;
@@ -106,14 +92,16 @@ void App::onEvent(SDL_Event* e) {
 		switch (e->key.keysym.sym)
 		{
 			case SDLK_UP:
-				curShape->rotate(90);
+				if (!gameOver) {
+					curShape->rotate(90);
 
-				//check if rotation causes collision
-				if (checkBlockOutOfScreen(curShape->getBlocks())) {
-					//rotate the block back
-					curShape->rotate(90);
-					curShape->rotate(90);
-					curShape->rotate(90);
+					//check if rotation causes collision
+					if (checkBlockOutOfScreen(curShape->getBlocks())) {
+						//rotate the block back
+						curShape->rotate(90);
+						curShape->rotate(90);
+						curShape->rotate(90);
+					}
 				}
 				break;
 			case SDLK_RIGHT:
@@ -173,70 +161,120 @@ void App::onEvent(SDL_Event* e) {
 				break;
 		}
 	}
+	else if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP)
+	{
+		//get mouse position
+		int x, y;
+
+		SDL_GetMouseState(&x, &y);
+
+		//check if mouse is over start menu item
+		if (x > 285 && x < 350 && y > 280 && y < 320) {
+			startMenuTextColor.r = 80;
+			startMenuTextColor.g = 80;
+			startMenuTextColor.b = 80;
+
+			if( !gStartTexture->loadFromRenderedText(gRenderer, gFont, "Start", startMenuTextColor ) )
+			{
+				printf( "Failed to render text texture!\n" );
+			}
+
+			if (e->type == SDL_MOUSEBUTTONDOWN) {
+				gameStarted = true;
+				gameRunning = true;
+			}
+		}
+		else
+		{
+			startMenuTextColor.r = 0;
+			startMenuTextColor.g = 0;
+			startMenuTextColor.b = 0;
+
+			if( !gStartTexture->loadFromRenderedText(gRenderer, gFont, "Start", startMenuTextColor ) )
+			{
+				printf( "Failed to render text texture!\n" );
+			}
+		}
+	}
 }
 
 void App::onLoop() {
 	capTimer.start();
 
-	Shape* curShape = NULL;
-	curShape = shapes.back();
+	if (gameRunning && curShape == NULL) {
+		//initialize first shape
+		curShape = getRandomBlock();
+		curShape->setPosition(192, 64);
 
-	if (blockTimer.getTicks() > ticks + ticksBetweenMovement) {
-		ticks = blockTimer.getTicks();
+		//initialize next shape
+		nextShape = getRandomBlock(3);
 
-		curShape->moveDown();
+		//calculate x position based on width of shape
+		int width = nextShape->getWidth();
+		int xPos = (192 - width) / 2;
 
-		//check if block is out of screen
-		if(checkBlockOutOfScreen(curShape->getBlocks())) {
-			//if block is out of screen
+		nextShape->setPosition(xPos, 352);
+	}
 
-			//move blocks back
-			curShape->moveUp();
+	if (gameStarted) {
+		if (blockTimer.getTicks() > ticks + ticksBetweenMovement) {
+			ticks = blockTimer.getTicks();
 
-			Block* curShapeBlocks = curShape->getBlocks();
+			curShape->moveDown();
 
-			onBlockSet(curShapeBlocks);
+			//check if block is out of screen
+			if(checkBlockOutOfScreen(curShape->getBlocks())) {
+				//if block is out of screen
 
-			return;
-		}
+				//move blocks back
+				curShape->moveUp();
 
-		//check for collision with other block
-		if (checkCollision(curShape->getBlocks(), screenColliders)) {
-			curShape->moveUp();
+				onBlockSet(curShape->getBlocks());
 
-			Block* curShapeBlocks = curShape->getBlocks();
-
-			//add blocks to screenBlocks array
-			for (int i = 0; i < 4; i++)
-			{
-				screenBlocks[curShapeBlocks[i].getYPos() / 32][curShapeBlocks[i].getXPos() / 32] = &curShapeBlocks[i];
+				return;
 			}
 
-			//add collision boxes to screencolliders array
-			setScreenColliders(curShape->getBlocks());
+			//check for collision with other block
+			if (checkCollision(curShape->getBlocks(), screenColliders)) {
+				curShape->moveUp();
 
-			//check if any lines were cleared
-			for (int i = 0; i < 4; i++)
-			{
-				if(checkLineCleared(curShape->getBlocks()[i].getYPos() / 32)) {
-					//clear the line
-					clearLine(curShapeBlocks[i].getYPos() / 32);
+				Block* curShapeBlocks = curShape->getBlocks();
 
-					//clear screen state
-					nullScreenColliderLine(curShapeBlocks[i].getYPos() / 32);
-
-					//move blocks above the line down
-					moveBlocksDownAfterClearingLine(curShapeBlocks[i].getYPos() / 32);
+				//add blocks to screenBlocks array
+				for (int i = 0; i < 4; i++)
+				{
+					screenBlocks[curShapeBlocks[i].getYPos() / 32][curShapeBlocks[i].getXPos() / 32] = &curShapeBlocks[i];
 				}
+
+				//add collision boxes to screencolliders array
+				setScreenColliders(curShape->getBlocks());
+
+				//check if any lines were cleared
+				for (int i = 0; i < 4; i++)
+				{
+					if(checkLineCleared(curShape->getBlocks()[i].getYPos() / 32)) {
+						//clear the line
+						clearLine(curShapeBlocks[i].getYPos() / 32);
+
+						//clear screen state
+						nullScreenColliderLine(curShapeBlocks[i].getYPos() / 32);
+
+						//move blocks above the line down
+						moveBlocksDownAfterClearingLine(curShapeBlocks[i].getYPos() / 32);
+					}
+				}
+
+				//check for loss condition
+				if (checkForLoss())
+					gameOver = true;
+
+				if (gameOver) {
+					//show game over screen
+					gGameOverTexture->render(250, 240, gRenderer);
+				}
+				else
+					onBlockSet(curShape->getBlocks());
 			}
-
-			//create a new shape
-			Shape* s = getRandomBlock();
-
-			s->setPosition(192, 32);
-
-			//add new shape to shapes array
-			shapes.push_back(s);
 		}
 	}
 }
@@ -245,6 +283,12 @@ void App::onRender() {
 	//define viewports for game and legend
 	SDL_Rect gameViewPort;
 	SDL_Rect legendViewport;
+	SDL_Rect menu;
+
+	menu.x = 0;
+	menu.y = 0;
+	menu.w = BLOCK_WIDTH * 20;
+	menu.h = BLOCK_WIDTH * 20;
 
 	gameViewPort.x = 0;
 	gameViewPort.y = 0;
@@ -262,82 +306,93 @@ void App::onRender() {
 	SDL_Rect gameBackground = { 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH };
 
 	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
 	SDL_RenderFillRect(gRenderer, &gameBackground);
 
-	SDL_RenderSetViewport(gRenderer, &gameViewPort);
+	if (!gameStarted)
+		SDL_RenderSetViewport(gRenderer, &menu);
 
 	//render the current shape
-	renderShape(curShape->getBlocks());
+	if (gameStarted) {
+		SDL_RenderSetViewport(gRenderer, &gameViewPort);
 
-	//render set shapes
-	for (int i = 0; i < SCREEN_HEIGHT / 32; i++)
-	{
-		for (int j = 0; j < SCREEN_WIDTH / 32 - 6; j++)
+		renderShape(curShape->getBlocks());
+
+		//render set shapes
+		for (int i = 0; i < SCREEN_HEIGHT / 32; i++)
 		{
-			if (screenBlocks[i][j] != NULL) {
+			for (int j = 0; j < SCREEN_WIDTH / 32 - 6; j++)
+			{
+				if (screenBlocks[i][j] != NULL) {
 
-				switch (screenBlocks[i][j]->getColor())
-				{
-					case Color::Blue:
-						SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
-						break;
-					case Color::Green:
-						SDL_SetRenderDrawColor(gRenderer, 0x00, 0x80, 0x00, 0xFF);
-						break;
-					case Color::Orange:
-						SDL_SetRenderDrawColor(gRenderer, 0xF8, 0x72, 0x17, 0xFF);
-						break;
-					case Color::Purple:
-						SDL_SetRenderDrawColor(gRenderer, 0x7D, 0x05, 0x41, 0xFF);
-						break;
-					case Color::Red:
-						SDL_SetRenderDrawColor(gRenderer, 0x99, 0x00, 0x12, 0xFF);
-						break;
-					case Color::Turqoise:
-						SDL_SetRenderDrawColor(gRenderer, 0x3B, 0x9C, 0x9C, 0xFF);
-						break;
-					case Color::Yellow:
-						SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
-						break;
-					default:
-						break;
+					switch (screenBlocks[i][j]->getColor())
+					{
+						case Color::Blue:
+							SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+							break;
+						case Color::Green:
+							SDL_SetRenderDrawColor(gRenderer, 0x00, 0x80, 0x00, 0xFF);
+							break;
+						case Color::Orange:
+							SDL_SetRenderDrawColor(gRenderer, 0xF8, 0x72, 0x17, 0xFF);
+							break;
+						case Color::Purple:
+							SDL_SetRenderDrawColor(gRenderer, 0x7D, 0x05, 0x41, 0xFF);
+							break;
+						case Color::Red:
+							SDL_SetRenderDrawColor(gRenderer, 0x99, 0x00, 0x12, 0xFF);
+							break;
+						case Color::Turqoise:
+							SDL_SetRenderDrawColor(gRenderer, 0x3B, 0x9C, 0x9C, 0xFF);
+							break;
+						case Color::Yellow:
+							SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
+							break;
+						default:
+							break;
+					}
+
+					SDL_RenderFillRect(gRenderer, screenBlocks[i][j]->getSDLBlock());
 				}
-
-				SDL_RenderFillRect(gRenderer, screenBlocks[i][j]->getSDLBlock());
 			}
 		}
 	}
 
 	//render legend
-	SDL_RenderSetViewport(gRenderer, &legendViewport);
+	if (gameStarted) {
+		SDL_SetRenderDrawColor(gRenderer, 0xB2, 0xB2, 0xB2, 0xB2);
+		SDL_RenderSetViewport(gRenderer, &legendViewport);
+	}
 
 	//render background
 	SDL_Rect background = { 0, 0, SCREEN_HEIGHT, SCREEN_WIDTH };
 
-	SDL_SetRenderDrawColor(gRenderer, 0xB2, 0xB2, 0xB2, 0xB2);
-
-	SDL_RenderFillRect(gRenderer, &background);
+	if (!gameStarted) {
+		gMenuTexture->render(280, 240, gRenderer);
+		gStartTexture->render(285, 280, gRenderer);
+	}
 
 	//render score
-	gTextTexture->render(60, 32, gRenderer);
+	if (gameStarted) {
+		gTextTexture->render(60, 32, gRenderer);
+		gScoreTexture->render(60, 64, gRenderer);
 
-	gScoreTexture->render(60, 64, gRenderer);
+		//render level
+		gLevelTextTexture->render(60, 128, gRenderer);
+		gLevelTexture->render(60, 160, gRenderer);
 
-	//render level
-	gLevelTextTexture->render(60, 128, gRenderer);
+		//render lines
+		gLinesTextTexture->render(60, 224, gRenderer);
+		gLinesTexture->render(60, 256, gRenderer);
 
-	gLevelTexture->render(60, 160, gRenderer);
+		//render next block
+		renderShape(nextShape->getBlocks());
 
-	//render lines
-	gLinesTextTexture->render(60, 224, gRenderer);
+		SDL_RenderSetViewport(gRenderer, &legendViewport);
+		SDL_SetRenderDrawColor(gRenderer, 0xB2, 0xB2, 0xB2, 0xB2);
 
-	gLinesTexture->render(60, 256, gRenderer);
-
-	//render next block
-	renderShape(nextShape->getBlocks());
-
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		if (gameOver)
+			gGameOverTexture->render(290, 240, gRenderer);
+	}
 
 	//update screen
 	SDL_RenderPresent(gRenderer);
@@ -534,7 +589,7 @@ void App::onBlockSet(Block* blocks) {
 	//add blocks to screenBlocks array
 	for (int i = 0; i < 4; i++)
 	{
-		screenBlocks[blocks[i].getYPos() / 32][blocks[i].getXPos() / 32] = &shapes.back()->getBlocks()[i];
+		screenBlocks[blocks[i].getYPos() / 32][blocks[i].getXPos() / 32] = &curShape->getBlocks()[i];
 	}
 
 	//add collision boxes to screencolliders array
@@ -552,8 +607,6 @@ void App::onBlockSet(Block* blocks) {
 
 			//move blocks above the line down
 			moveBlocksDownAfterClearingLine(blocks[i].getYPos() / 32);
-
-			SDL_Color textColor = { 0, 0, 0 };
 
 			//update score
 			score += 50;
@@ -579,33 +632,55 @@ void App::onBlockSet(Block* blocks) {
 				ticksBetweenMovement = 600;
 			}
 
+			SDL_Color color = { 0, 0, 0 };
+
 			//update the score
-			gScoreTexture->loadFromRenderedText(gRenderer, gFont, to_string(score), textColor);
+			gScoreTexture->loadFromRenderedText(gRenderer, gFont, to_string(score), color);
 
 			//update the level
-			gLevelTexture->loadFromRenderedText(gRenderer, gFont, to_string(level), textColor );
+			gLevelTexture->loadFromRenderedText(gRenderer, gFont, to_string(level), color );
 
 			//update the lines
-			gLinesTexture->loadFromRenderedText(gRenderer, gFont, to_string(lines), textColor );
+			gLinesTexture->loadFromRenderedText(gRenderer, gFont, to_string(lines), color );
 		}
 	}
 
-	//add next shape to shapes array
-	shapes.push_back(nextShape);
+	//check for loss condition
+	if (checkForLoss())
+		//display game over screen
+		gameOver = true;
 
-	curShape = shapes.back();
+	if (gameOver) {
+		//show game over screen
+		gGameOverTexture->render(280, 240, gRenderer);
+	}
+	else {
+		//set next shape as current shape
+		curShape = nextShape;
 
-	//set the position of the block
-	curShape->setPosition(192, 32);
+		//set the position of the block
+		curShape->setPosition(192, 32);
 
-	//instantiate next block
-	nextShape = getRandomBlock();
+		//instantiate next block
+		nextShape = getRandomBlock();
 
-	//calculate x position of next shape
-	int width = nextShape->getWidth();
-	int xPos = (192 - width) / 2;
+		//calculate x position of next shape
+		int width = nextShape->getWidth();
+		int xPos = (192 - width) / 2;
 
-	nextShape->setPosition(xPos, 352);
+		nextShape->setPosition(xPos, 352);
+	}
+}
+
+bool App::checkForLoss() {
+	//check if any block is higher than top of screen
+	for (int i = 0; i < 4; i++)
+	{
+		if (curShape->getBlocks()[i].getYPos() <= 32)
+			return true;
+	}
+
+	return false;
 }
 
 void App::moveBlocksDownAfterClearingLine(int clearedLineYIndex) {
@@ -749,6 +824,27 @@ bool App::loadMedia()
 
         //initialize lines
         if( !gLinesTexture->loadFromRenderedText(gRenderer, gFont, "0", textColor ) )
+        {
+            printf( "Failed to render text texture!\n" );
+            success = false;
+        }
+
+        //initialize lines
+        if( !gMenuTexture->loadFromRenderedText(gRenderer, gFont, "TETRIS", textColor ) )
+        {
+            printf( "Failed to render text texture!\n" );
+            success = false;
+        }
+
+        //initialize start menu
+        if( !gStartTexture->loadFromRenderedText(gRenderer, gFont, "Start", startMenuTextColor ) )
+        {
+            printf( "Failed to render text texture!\n" );
+            success = false;
+        }
+
+        //initialize game over screen
+        if( !gGameOverTexture->loadFromRenderedText(gRenderer, gFont, "Game Over", textColor ) )
         {
             printf( "Failed to render text texture!\n" );
             success = false;
