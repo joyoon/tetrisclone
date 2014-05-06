@@ -281,7 +281,7 @@ void App::onLoop() {
 
 void App::onRender() {
 	//define viewports for game and legend
-	SDL_Rect gameViewPort;
+	SDL_Rect gameViewport;
 	SDL_Rect legendViewport;
 	SDL_Rect menu;
 
@@ -290,10 +290,10 @@ void App::onRender() {
 	menu.w = BLOCK_WIDTH * 20;
 	menu.h = BLOCK_WIDTH * 20;
 
-	gameViewPort.x = 0;
-	gameViewPort.y = 0;
-	gameViewPort.w = BLOCK_WIDTH * 14;
-	gameViewPort.h = SCREEN_HEIGHT;
+	gameViewport.x = 0;
+	gameViewport.y = 0;
+	gameViewport.w = BLOCK_WIDTH * 14;
+	gameViewport.h = SCREEN_HEIGHT;
 
 	legendViewport.x = BLOCK_WIDTH * 14;
 	legendViewport.y = 0;
@@ -313,7 +313,7 @@ void App::onRender() {
 
 	//render the current shape
 	if (gameStarted) {
-		SDL_RenderSetViewport(gRenderer, &gameViewPort);
+		SDL_RenderSetViewport(gRenderer, &gameViewport);
 
 		renderShape(curShape->getBlocks());
 
@@ -387,8 +387,8 @@ void App::onRender() {
 		//render next block
 		renderShape(nextShape->getBlocks());
 
-		SDL_RenderSetViewport(gRenderer, &legendViewport);
 		SDL_SetRenderDrawColor(gRenderer, 0xB2, 0xB2, 0xB2, 0xB2);
+		SDL_RenderSetViewport(gRenderer, &gameViewport);
 
 		if (gameOver)
 			gGameOverTexture->render(290, 240, gRenderer);
